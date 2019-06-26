@@ -1,0 +1,27 @@
+#!/bin/sh
+#
+# diff results of run1/ and runN/ (N = 2..6)
+# Success: no output
+
+cd run1/
+files=`ls *.xyz *.dat`
+cd ..
+
+runs="run2 run3 run4 run5 run6"
+for r in ${runs}; do
+   for f in ${files}; do
+      #echo "testing ${r}/${f}"
+      diff run1/${f} ${r}/${f}
+   done
+   means1=`tail -n 8 run1/log | head -n 4`
+   means2=`tail -n 8 ${r}/log | head -n 4`
+   #echo "testing ${r}/log"
+   if [ "${means1}" != "${means2}" ]; then 
+      echo "Means are not equal!"
+      echo "run1/:"
+      echo ${means1}
+      echo "${r}/:"
+      echo ${means2}
+   fi
+done
+

@@ -1,0 +1,49 @@
+
+These tests verify the DLA::RNG implementatoin.
+
+--------
+cf_boost
+--------
+   DLA::RNG uses a boost::mt11213b pseudo-random number generator to generate
+random integers in [0, 2^32).  The DLA::RNG::yield() method scales these
+integers by 1/2^32 to produce doubles in [0.0, 1.0).  Boost offers a 
+uniform_01 generator that can also use a mt11213b generator to return values 
+in [0, 1).
+   The DLA::RNG::yield() method is used in all the innermoost loops of OpenDLA
+to model diffusion of a walker, so this method should be fast.  The uniform_01
+invocation involves, for an engine eng, (eng()-eng.mmin)*(1/(eng.max-eng.min)),
+2 subtractions, 1 division, and 1 multiplication, compared to 1 multiplication
+for the scaling used in DLA::RNG::yield().
+   The cf_boost tests the performance of these 2 methods by timing the 
+generation of 1000 sequences of 5000000 random values in [0, 1).  The mean 
+time to generate one sequence using DLA::RNG::yield() is routinely shorter than
+boost::uniform_01 by a factor of 2.2 - 2.3.
+
+----------
+randomness
+----------
+   This test creates 1000 generators, using the seed+1 algorithm employed
+in OpenDLA.  That is, if generator 0 has seed 12345, then generator 1 will
+have seed 12346, and generator 2 will have seed 12347, and so on.  The output
+file, rng.data, is input for the NIST Statistical Test Suite (STS).  This file
+holds 15,000 binary sequences of 1,000 uint32_t values (STS expects a uniform
+distribution of 0 and 1 in binary data -- use ints).  Each sequence is created 
+by iterating over the 1000 generates, each of which adds a single value to each
+sequence.  The size of the output file is 1.5e7*sizeof(uint32_t).
+   If the seed+1 algorithm is not producing suitably random sequences (i.e.
+sequences that are sufficiently uncorrelated from sequences produced by other
+generators) this test should identify any patterns.
+
+Steps:
+make randomness
+./randomness
+mv rng.data ~/software/public/nist_sts-2.1.1/sts-2.1.1/data
+cd ~/software/public/nist_sts-2.1.1/sts-2.1.1/
+./assess 1000000
+   (menus: all tests, 60 bitstreams)
+
+Output:
+   freq.txt: frequencies of 0 and 1 in binary sequences
+   finalAnalysisReport.txt: distribution of p-values, proportions of passing
+      sequences: 57/60 sequences pass (have p-values > 0.01).  
+      P-values look good.

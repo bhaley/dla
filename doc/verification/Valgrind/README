@@ -1,0 +1,18 @@
+
+   This test verifies that memory is handled cleanly in OpenDLA.  We grow a 
+50 particle cluster on a 2D lattice and use Valgrind's leak check tool to
+identify memory leaks.  The Valgrind invocation is
+
+(module load valgrind)
+valgrind --leak-check=full --show-reachable=yes -v ../../../dla in > output 2>&1
+
+   The output_bad result was produced on the Purdue Hansen machine using the
+same build as the Accumulator verification:
+
+module load mpich2-1.4-intel64/11.1.038 boost-intel64/1.47.0 
+./configure --with-boost=/apps/rhel5/boost_1_47_0-intel64
+
+Note that some memory is leaking in the libiomp library; this is most likely
+a problem with that library on that machine.  When we recompile OpenDLA with
+the additional configure flag "--without-openmp", we get the clean output in
+output_good.  No memory is leaking.

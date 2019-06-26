@@ -1,0 +1,5 @@
+
+   This test studies the effect of ensemble size (number of clusters) on the
+structural properties r(N), Rg(N), and C(r).  Ensembles of 1, 2, 4, 8, 16, 32,
+64, and 128 clusters of 8000 particles in a 2D fluid are grown.  The size of
+the ensemble does not seem to influence these properties.

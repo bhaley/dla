@@ -1,0 +1,28 @@
+
+   This test verifies the mean and stddev values accumulated for multiple 
+clusters in different node/thread distributions.  Each run grows 4 5000 
+particle 2D lattice clusters.  The following table gives the distribution of 
+clusters across threads and processes:
+
+          MPI    Threads per  Clusters per                Wall time
+  Run  Processes   process      thread                       sec
+  ---  ---------   -------      ------                      ----
+   1       1          1            4  (all consecutive)     126
+   2       1          2            2                         75
+   3       1          4            1  (all concurrent)       51
+   4       2          1            2                         69
+   5       2          2            1  (all concurrent)       37
+   6       4          1            1  (all concurrent)       50
+
+   Each run produces XYZ, growth, and correlation output. These outputs, along 
+with the radius, radius of gyration, cappture fraction, and free steps lines in
+the log files (i.e. not the growth time) should be identical.  The diff script 
+compares the outputs.
+
+   Note that this test does NOT concern the "correctness" of the output; it only
+determines that the results are identical regardless of how the 4 clusters are
+distributed among processes and threads.
+
+   The results in this directory were computed on the Purdue Hansen cluster, 
+using the modules specified in ./run_dla.
+

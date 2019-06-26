@@ -1,0 +1,15 @@
+
+   This test attempts to validate OpenDLA by recreating the key results from
+the original Witten-Sander (W-S) paper (Phys. Rev. Letters 47 1400 (1981)).
+This input file grows 6 clusters of 3000 particles on a 2D lattice.  The slope
+of the density correlation C(r) plot gives the correlation exponent A, such 
+that D = d - A, where d = 2 for this 2D cluster.  This simulation yields 
+A = 0.37 +/- 0.03 (fit from r = 7 to r = 27) (large fluctuations in C(r) for
+r < 7 and r = 27 was the cutoff used by W-S) and A = 0.39 +/- 0.02 (fit from
+r = 7 to r = 40, the "eyeball" point on the C(r) curve at which the slope
+changes).  W-S reported A = 0.343 +/- 0.004, so this result seems reasonable.
+
+   Since D = d - A, the fractal dimension D of the cluster should be about
+D ~ 2 - 0.34 = 1.66.  This simulation gives D ~ 1.738 from the slope of the
+N(r) curve, so D is a little high, but not unreasonable.  
+

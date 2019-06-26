@@ -1,0 +1,14 @@
+total_clusters      = 4
+process_threads     = 1
+cluster_particles   = 5e3
+medium              = lattice_2D
+start_distance      = 20.0
+step_size           = 1.0
+particle_radius     = 0.5
+capture_distance    = 1.1
+stickiness          = 1.0
+growth_step         = 50
+xyz_step            = 5e3
+density_bin         = 10
+rng_seed            = 12345
+log_file            = log

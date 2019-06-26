@@ -1,0 +1,26 @@
+// ============================================================================
+// @configure_input@
+// ----------------------------------------------------------------------------
+// Author: Benjamin P. Haley
+// Copyright (c) 2012 Benjamin P. Haley
+// ----------------------------------------------------------------------------
+// See the LICENSE file for information on usage and redistribution of this
+// file and for a DISCLAIMER OF ALL WARRANTIES.
+// ============================================================================
+
+#ifndef DLA_CONFIG_H
+#define DLA_CONFIG_H
+
+// MPI
+@HAVE_MPI@
+
+// OpenMP
+@HAVE_OPENMP@
+
+// Program name
+#define DLA_PROGRAM "@PACKAGE_NAME@"
+
+// Version
+#define DLA_VERSION "@PACKAGE_VERSION@"
+
+#endif  // DLA_CONFIG_H

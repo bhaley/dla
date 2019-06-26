@@ -1,0 +1,23 @@
+#
+# DLA input file
+
+total_clusters      = 1           # all processes, all threads
+process_threads     = 1
+
+cluster_particles   = 3e3
+medium              = lattice_2D  # lattice_2D, lattice_3D, fluid_2D, fluid_3D
+start_distance      = 20.0
+step_size           = 1.0         # lattice parameter for lattice_?D media
+particle_radius     = 0.5
+capture_distance    = 1.1
+stickiness          = 1.0
+
+growth_step         = 30          # 0: disable radius growth output
+xyz_step            = 3e3         # 0: disable XYZ output
+status_step         = 0           # 0: disable status output (rank 0, cluster 0)
+density_bin         = 1           # 0: disable density correlation output
+
+rng_seed            = 12345       # 0: use current time
+
+log_file            = dla.log     # default: stdout
+

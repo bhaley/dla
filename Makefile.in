@@ -1,0 +1,99 @@
+#
+# @configure_input@
+
+PACKAGE_NAME = @PACKAGE_NAME@
+EXE_NAME     = @EXE_NAME@
+VERSION      = @PACKAGE_VERSION@
+CXX          = @CXX@
+CXXFLAGS     = @CXXFLAGS@ @BOOST_CPPFLAGS@ #-DRAPPTURE_STATUS -DXYZ_SAME_INDEX
+OBJEXT       = @OBJEXT@
+LD           = $(CXX)
+LDFLAGS      = @LDFLAGS@ @BOOST_LDFLAGS@
+LIBS         = @LIBS@ -lm -lboost_program_options
+EXEEXT       = @EXEEXT@
+INSTALL      = @INSTALL@
+prefix       = @prefix@
+exec_prefix  = @exec_prefix@
+CWD          = @abs_builddir@
+BINDIR       = @bindir@
+
+SRC          = src
+NEAR_TREE    = lib/NearTree-3.1.1
+
+HEADERS      = $(SRC)/Accumulator.h \
+               $(SRC)/Cluster.h \
+               $(SRC)/Config.h.in \
+               $(SRC)/Fluid2D.h \
+               $(SRC)/Fluid3D.h \
+               $(SRC)/Lattice2D.h \
+               $(SRC)/Lattice3D.h \
+               $(SRC)/Medium.h \
+               $(SRC)/Params.h \
+               $(SRC)/Position.h \
+               $(SRC)/Property.h \
+               $(SRC)/PropertyInterface.h \
+               $(SRC)/RNG.h \
+               $(SRC)/Timer.h
+SOURCES      = $(SRC)/Accumulator.cc \
+               $(SRC)/Cluster.cc \
+               $(SRC)/Params.cc
+OBJECTS      = $(SOURCES:.cc=.$(OBJEXT)) 
+DLA_CC       = $(SRC)/DLA.cc
+DLA_OBJ      = $(DLA_CC:.cc=.$(OBJEXT))
+DLA_OBJECTS  = $(OBJECTS) $(DLA_OBJ)
+DLA_EXE      = $(EXE_NAME)$(EXEEXT)
+TEST_CC      = $(SRC)/Tests.cc
+TEST_OBJ     = $(TEST_CC:.cc=.$(OBJEXT))
+TEST_OBJECTS = $(OBJECTS) $(TEST_OBJ) 
+TEST_EXE     = tests$(EXEEXT)
+BUILD_FILES  = configure Makefile.in install-sh
+DOC_FILES    = doc/input_file
+UTIL_FILES   = utils/xyz_pml
+DIST_FILES   = $(HEADERS) $(SOURCES) $(DLA_CC) $(TEST_CC) $(BUILD_FILES) \
+               $(DOC_FILES) $(UTIL_FILES)
+DIST_NAME    = $(PACKAGE_NAME)-$(VERSION)
+
+INCLUDES     = -I$(SRC) -I$(NEAR_TREE)
+CXX_CMD      = $(CXX) $(CXXFLAGS) $(INCLUDES)
+
+%.$(OBJEXT): %.cc
+	$(CXX_CMD) -c -o $@ $<
+
+all: $(DLA_EXE)
+
+$(DLA_EXE): $(HEADERS) $(DLA_OBJECTS)
+	$(LD) -o $@ $(LDFLAGS) $(DLA_OBJECTS) $(LIBS) 
+
+$(TEST_EXE): $(HEADERS) $(TEST_OBJECTS)
+	$(LD) -o $@ $(LDFLAGS) $(TEST_OBJECTS) $(LIBS) -lboost_unit_test_framework
+
+# Other flags: --log_level=success|error|all --show_progress 
+test: $(TEST_EXE)
+	@-(echo; ./$(TEST_EXE) --report_level=short)
+
+check: test
+
+install-dirs:
+	$(INSTALL) -d $(BINDIR)
+
+install: install-dirs
+	$(INSTALL) $(DLA_EXE) $(BINDIR)
+
+# Undo "make", "make test"
+clean:
+	@-rm $(DLA_OBJECTS) $(DLA_EXE) $(TEST_OBJ) $(TEST_EXE)
+
+# Undo "./configure", "make", "make test", 
+distclean: clean
+	@-rm Makefile src/Config.h config.log config.status
+
+# TODO
+manual:
+
+dist: manual
+	@ls $(DIST_FILES) | sed s:^:$(DIST_NAME)/: > TEMP
+	@ls $(NEAR_TREE)  | sed s:^:$(DIST_NAME)/$(NEAR_TREE)/: >> TEMP
+	@(cd ..; ln -s $(CWD) $(DIST_NAME))
+	@(cd ..; tar cvfz $(CWD)/$(DIST_NAME).tar.gz `cat $(CWD)/TEMP`)
+	@(rm TEMP; cd ..; rm $(DIST_NAME))
+

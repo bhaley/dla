@@ -1,0 +1,29 @@
+==============================================================================
+OpenDLA version 1.0.0   (MPI: enabled)   (OpenMP: enabled)
+==============================================================================
+
+Total clusters:    6
+Process threads:   6
+Cluster particles: 3000
+Medium:            lattice_2D
+Start distance:    20
+Step size:         1
+Particle radius:   0.5
+Capture distance:  1.1
+Stickiness:        1
+Growth step:       15
+XYZ step:          3000
+Density bin size:  1
+RNG seed:          1342799429
+
+Growing 6 clusters on 1 node: 6 on each node
+   6 threads per process: 1 cluster per thread
+
+Mean radius: 113.301 (stddev: 7.06021)
+Mean radius of gyration: 38.5303 (stddev: 1.09739)
+Mean capture fraction: 0.0103597 (stddev: 0.00101371)
+Mean free steps: 1258.95 (stddev: 194.878)
+Mean growth time: 6.1615 (stddev: 1.46552)
+Wrote radius_growth.dat
+Wrote radius_gyration_growth.dat
+Wrote density_correlation.dat
